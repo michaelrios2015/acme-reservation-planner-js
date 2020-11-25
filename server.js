@@ -133,14 +133,18 @@ app.use('/dist', express.static(path.join(__dirname, 'dist')));
 
 app.get('/', (req, res, next)=> res.sendFile(path.join(__dirname, 'index.html')));
 
+
+
 app.get('/api/users', async(req, res, next)=> {
   try {
+      //find id 
     res.send(await User.findAll());
   }
   catch(ex){
     next(ex);
   }
 });
+
 
 app.get('/api/restaurants', async(req, res, next)=> {
   try {
@@ -151,6 +155,8 @@ app.get('/api/restaurants', async(req, res, next)=> {
   }
 });
 
+
+
 app.get('/api/users/:userId/reservations', async(req, res, next)=> {
   try {
     res.send(await Reservation.findAll({ where: { userId: req.params.userId }}));
@@ -160,6 +166,7 @@ app.get('/api/users/:userId/reservations', async(req, res, next)=> {
   }
 });
 
+
 app.post('/api/users/:userId/reservations', async(req, res, next)=> {
   try {
     res.status(201).send(await Reservation.create({ userId: req.params.userId, restaurantId: req.body.restaurantId}));
@@ -168,6 +175,8 @@ app.post('/api/users/:userId/reservations', async(req, res, next)=> {
     next(ex);
   }
 });
+
+
 
 app.delete('/api/reservations/:id', async(req, res, next)=> {
   try {
@@ -180,11 +189,20 @@ app.delete('/api/reservations/:id', async(req, res, next)=> {
   }
 });
 
+
+
+
 app.use((err, req, res, next)=> {
   console.log(chalk.red(err.stack));
   res.status(500).send({ error: err.message });
 });
+
+
+
 const port = process.env.PORT || 3000;
+
+
+
 
 const init = async()=> {
   await syncAndSeed();
